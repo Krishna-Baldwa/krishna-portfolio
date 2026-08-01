@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: #0E0D0C; color: #EDEAE4; font-family: Inter, system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  a { color: var(--accent, #8B7BFF); text-decoration: none; transition: color .2s ease, opacity .2s ease; }
+  a:hover { color: var(--accent-hi, #A99BFF); }
+  ::selection { background: var(--accent-dim, rgba(139,123,255,.3)); }
+  @keyframes flow { to { stroke-dashoffset: -240; } }
+  @keyframes breathe { 0%,100% { opacity: .35 } 50% { opacity: .85 } }
+  @keyframes blink { 0%,49% { opacity: 1 } 50%,100% { opacity: 0 } }
+  @keyframes drift { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+  @keyframes marquee { to { transform: translateX(-50%) } }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 var(--accent-dim, rgba(139,123,255,.3)) } 50% { box-shadow: 0 0 0 7px transparent } }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</helmet>
+
+<div style="position:relative;overflow-x:clip;background:#0E0D0C;min-height:100vh">
+  <canvas id="fx-canvas" style="position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none;opacity:.45"></canvas>
+  <div data-plx="-0.06" style="position:absolute;inset:-10% -5% auto;height:900px;background:radial-gradient(900px 520px at 78% 6%, var(--accent-glow, rgba(139,123,255,.16)), transparent 70%);pointer-events:none;will-change:transform"></div>
+
+  <div style="position:fixed;left:0;top:0;bottom:0;width:2px;z-index:70;background:rgba(255,255,255,.05)">
+    <div id="pl-fill" style="position:absolute;left:0;top:0;width:100%;height:100%;background:linear-gradient(180deg, var(--accent, #8B7BFF), var(--accent-hi, #A99BFF));transform:scaleY(0);transform-origin:top;will-change:transform"></div>
+  </div>
+
+  <div style="position:fixed;bottom:16px;right:16px;z-index:60;display:flex;gap:4px;padding:4px;border:1px solid rgba(255,255,255,.09);border-radius:999px;background:rgba(16,15,14,.72);backdrop-filter:blur(12px);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.04em">
+    <button onClick="{{ pickViolet }}" style="{{ violetBtn }}">violet</button>
+    <button onClick="{{ pickTeal }}" style="{{ tealBtn }}">teal</button>
+  </div>
+
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:55;display:flex;flex-direction:column;align-items:flex-end;gap:11px">
+      <sc-for list="{{ railItems }}" as="it" hint-placeholder-count="0">
+        <a href="{{ it.href }}" style="{{ it.style }}">{{ it.label }}</a>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <nav style="position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px clamp(18px,5vw,64px);background:rgba(14,13,12,.72);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.05)">
+    <a href="#top" style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;letter-spacing:-.01em;color:#EDEAE4">krishna<span style="color:var(--accent, #8B7BFF)">.</span></a>
+    <div style="display:flex;flex-wrap:wrap;gap:clamp(12px,2.2vw,26px);font-size:13.5px;color:#96908A">
+      <a href="#story" style="color:#96908A">Story</a>
+      <a href="#builds" style="color:#96908A">Builds</a>
+      <a href="#notebook" style="color:#96908A">Notebook</a>
+      <a href="#creator" style="color:#96908A">@inthe_blur</a>
+      <a href="#life" style="color:#96908A">Life</a>
+      <a href="#hi" style="color:#96908A">Say hi</a>
+    </div>
+  </nav>
+
+  <header id="top" data-screen-label="Hero" data-hero-exit style="position:relative;will-change:transform,opacity;padding:clamp(40px,7vw,86px) clamp(18px,5vw,64px) clamp(56px,8vw,110px);max-width:1240px;margin:0 auto">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:clamp(28px,5vw,64px)">
+      <div data-mplx="8" style="flex:1 1 380px;min-width:min(100%,320px);will-change:transform">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:26px">
+          <image-slot id="hero-portrait" shape="circle" style="width:104px;height:104px;flex:0 0 104px" placeholder="candid photo"></image-slot>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#7E7872;letter-spacing:.02em;min-height:17px">{{ planLine }}<span style="display:inline-block;width:7px;color:var(--accent, #8B7BFF);animation:blink 1s step-end infinite">▌</span></div>
+        </div>
+
+        <h1 data-splitrev style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(38px,7vw,80px);line-height:1.04;letter-spacing:-.035em;margin:0 0 22px;text-wrap:balance">I build with AI — and think out loud <span style="color:var(--accent, #8B7BFF)">about it.</span></h1>
+
+        <p style="margin:0 0 30px;max-width:46ch;font-size:clamp(15px,1.6vw,17.5px);line-height:1.6;color:#A29B93;font-weight:300;text-wrap:pretty">Krishna Baldwa. IIT Bombay engineer, AI product builder, and the person behind <a href="https://instagram.com/inthe_blur" target="_blank" rel="noopener">@inthe_blur</a>. Mumbai.</p>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <a href="#builds" style="display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;border:1px solid var(--accent-line, rgba(139,123,255,.38));background:var(--accent-fill, rgba(139,123,255,.1));color:#EDEAE4;font-size:13.5px">What I build <span style="color:var(--accent, #8B7BFF)">→</span></a>
+          <a href="#hi" style="display:inline-flex;align-items:center;padding:11px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.1);color:#A29B93;font-size:13.5px">Say hi</a>
+        </div>
+      </div>
+
+      <div data-mplx="22" style="flex:1 1 480px;min-width:min(100%,300px);align-self:center;will-change:transform">
+        <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+          <svg viewBox="0 0 340 690" style="width:100%;height:auto;max-height:74vh;display:block" aria-label="Agent orchestration graph">
+            <g data-draw stroke="rgba(255,255,255,.11)" fill="none" stroke-width="1">
+              <path d="M90,50 C90,92 150,92 150,124"></path>
+              <path d="M250,50 C250,92 190,92 190,124"></path>
+              <path d="M170,160 L170,222"></path>
+              <path d="M170,258 L170,320"></path>
+              <path d="M170,356 L170,418"></path>
+              <path d="M170,454 L170,660"></path>
+            </g>
+            <g stroke="var(--accent, #8B7BFF)" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="2 12" opacity=".85" style="animation:flow 7s linear infinite">
+              <path d="M90,50 C90,92 150,92 150,124"></path>
+              <path d="M250,50 C250,92 190,92 190,124"></path>
+              <path d="M170,160 L170,222"></path>
+              <path d="M170,258 L170,320"></path>
+              <path d="M170,356 L170,418"></path>
+              <path d="M170,454 L170,660"></path>
+            </g>
+            <g font-family="Inter, sans-serif" font-size="12.5" text-anchor="middle">
+              <g><rect x="20" y="14" width="140" height="36" rx="18" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.12)"></rect><text x="90" y="37" fill="#9A948B">an idea</text></g>
+              <g><rect x="180" y="14" width="140" height="36" rx="18" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.12)"></rect><text x="250" y="37" fill="#9A948B">messy data</text></g>
+              <g font-family="'JetBrains Mono', monospace" font-size="12.5">
+                <g style="animation:breathe 4s ease-in-out infinite"><rect x="110" y="124" width="120" height="36" rx="12" fill="var(--accent-fill, rgba(139,123,255,.1))" stroke="var(--accent-line, rgba(139,123,255,.38))"></rect><text x="170" y="147" fill="#EDEAE4">plan</text></g>
+                <g style="animation:breathe 4s ease-in-out .8s infinite"><rect x="105" y="222" width="130" height="36" rx="12" fill="var(--accent-fill, rgba(139,123,255,.1))" stroke="var(--accent-line, rgba(139,123,255,.38))"></rect><text x="170" y="245" fill="#EDEAE4">retrieve</text></g>
+                <g style="animation:breathe 4s ease-in-out 1.6s infinite"><rect x="108" y="320" width="124" height="36" rx="12" fill="var(--accent-fill, rgba(139,123,255,.1))" stroke="var(--accent-line, rgba(139,123,255,.38))"></rect><text x="170" y="343" fill="#EDEAE4">reason</text></g>
+                <g style="animation:breathe 4s ease-in-out 2.4s infinite"><rect x="122" y="418" width="96" height="36" rx="12" fill="var(--accent-fill, rgba(139,123,255,.1))" stroke="var(--accent-line, rgba(139,123,255,.38))"></rect><text x="170" y="441" fill="#EDEAE4">act</text></g>
+              </g>
+              <g><rect x="65" y="500" width="210" height="38" rx="19" fill="#151412" stroke="var(--accent-line, rgba(139,123,255,.38))"></rect><text x="170" y="524" fill="#EDEAE4">a shipped product</text></g>
+              <g><rect x="65" y="562" width="210" height="38" rx="19" fill="#151412" stroke="var(--accent-line, rgba(139,123,255,.38))"></rect><text x="170" y="586" fill="#EDEAE4">a post</text></g>
+              <g><rect x="65" y="624" width="210" height="38" rx="19" fill="#151412" stroke="var(--accent-line, rgba(139,123,255,.38))"></rect><text x="170" y="648" fill="#EDEAE4">an insight</text></g>
+            </g>
+          </svg>
+        </sc-if>
+        <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+          <svg viewBox="0 0 1100 380" style="width:100%;height:auto;display:block;animation:drift 12s ease-in-out infinite" aria-label="Agent orchestration graph">
+            <g data-draw stroke="rgba(255,255,255,.11)" fill="none" stroke-width="1">
+              <path d="M185,120 C250,120 265,185 330,185"></path>
+              <path d="M185,270 C250,270 265,205 330,205"></path>
+              <path d="M450,188 C472,188 470,105 490,105"></path>
+              <path d="M450,202 C472,202 475,285 495,285"></path>
+              <path d="M630,105 C652,105 650,188 670,188"></path>
+              <path d="M625,285 C648,285 650,202 670,202"></path>
+              <path d="M770,188 C812,188 815,90 855,90"></path>
+              <path d="M770,195 L855,195"></path>
+              <path d="M770,202 C812,202 815,300 855,300"></path>
+            </g>
+            <g stroke="var(--accent, #8B7BFF)" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="2 14" opacity=".9" style="animation:flow 6s linear infinite">
+              <path d="M185,120 C250,120 265,185 330,185"></path>
+              <path d="M185,270 C250,270 265,205 330,205"></path>
+              <path d="M450,188 C472,188 470,105 490,105"></path>
+              <path d="M450,202 C472,202 475,285 495,285"></path>
+              <path d="M630,105 C652,105 650,188 670,188"></path>
+              <path d="M625,285 C648,285 650,202 670,202"></path>
+              <path d="M770,188 C812,188 815,90 855,90"></path>
+              <path d="M770,195 L855,195"></path>
+              <path d="M770,202 C812,202 815,300 855,300"></path>
+            </g>
+            <g font-family="Inter, sans-serif" font-size="14" text-anchor="middle">
+              <g><rect x="35" y="98" width="150" height="44" rx="22" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.12)"></rect><text x="110" y="126" fill="#9A948B">an idea</text></g>
+              <g><rect x="35" y="248" width="150" height="44" rx="22" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.12)"></rect><text x="110" y="276" fill="#9A948B">messy data</text></g>
+              <g font-family="'JetBrains Mono', monospace" font-size="14">
+                <g style="animation:breathe 4s ease-in-out infinite"><rect x="330" y="175" width="120" height="40" rx="13" fill="var(--accent-fill, rgba(139,123,255,.1))" stroke="var(--accent-line, rgba(139,123,255,.38))"></rect><text x="390" y="201" fill="#EDEAE4">plan</text></g>
+                <g style="animation:breathe 4s ease-in-out .9s infinite"><rect x="490" y="85" width="140" height="40" rx="13" fill="var(--accent-fill, rgba(139,123,255,.1))" stroke="var(--accent-line, rgba(139,123,255,.38))"></rect><text x="560" y="111" fill="#EDEAE4">retrieve</text></g>
+                <g style="animation:breathe 4s ease-in-out 1.8s infinite"><rect x="495" y="265" width="130" height="40" rx="13" fill="var(--accent-fill, rgba(139,123,255,.1))" stroke="var(--accent-line, rgba(139,123,255,.38))"></rect><text x="560" y="291" fill="#EDEAE4">reason</text></g>
+                <g style="animation:breathe 4s ease-in-out 2.7s infinite"><rect x="670" y="175" width="100" height="40" rx="13" fill="var(--accent-fill, rgba(139,123,255,.1))" stroke="var(--accent-line, rgba(139,123,255,.38))"></rect><text x="720" y="201" fill="#EDEAE4">act</text></g>
+              </g>
+              <g><rect x="855" y="68" width="210" height="44" rx="22" fill="#151412" stroke="var(--accent-line, rgba(139,123,255,.38))"></rect><text x="960" y="96" fill="#EDEAE4">a shipped product</text></g>
+              <g><rect x="855" y="173" width="210" height="44" rx="22" fill="#151412" stroke="var(--accent-line, rgba(139,123,255,.38))"></rect><text x="960" y="201" fill="#EDEAE4">a post</text></g>
+              <g><rect x="855" y="278" width="210" height="44" rx="22" fill="#151412" stroke="var(--accent-line, rgba(139,123,255,.38))"></rect><text x="960" y="306" fill="#EDEAE4">an insight</text></g>
+            </g>
+          </svg>
+        </sc-if>
+        <div style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6E6862;letter-spacing:.03em;text-align:center">[graph: how a thing gets built]</div>
+      </div>
+    </div>
+    <div style="margin-top:clamp(30px,4.5vw,54px);font-family:'JetBrains Mono',monospace;font-size:11px;color:#6E6862;letter-spacing:.08em">scroll to explore ↓</div>
+  </header>
+
+  <div aria-hidden="true" style="overflow:hidden;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);padding:13px 0">
+    <div style="display:flex;gap:56px;width:max-content;animation:marquee 30s linear infinite;font-family:'JetBrains Mono',monospace;font-size:12px;color:#7E7872;letter-spacing:.08em;white-space:nowrap">
+      <span>plan <span style="color:var(--accent, #8B7BFF)">→</span> retrieve <span style="color:var(--accent, #8B7BFF)">→</span> reason <span style="color:var(--accent, #8B7BFF)">→</span> act <span style="color:var(--accent, #8B7BFF)">→</span> ship <span style="color:var(--accent, #8B7BFF)">→</span> explain <span style="color:var(--accent, #8B7BFF)">→</span> repeat <span style="color:var(--accent, #8B7BFF)">→</span> plan <span style="color:var(--accent, #8B7BFF)">→</span> retrieve <span style="color:var(--accent, #8B7BFF)">→</span> reason <span style="color:var(--accent, #8B7BFF)">→</span> act <span style="color:var(--accent, #8B7BFF)">→</span> ship <span style="color:var(--accent, #8B7BFF)">→</span> explain <span style="color:var(--accent, #8B7BFF)">→</span> repeat <span style="color:var(--accent, #8B7BFF)">→</span></span>
+      <span>plan <span style="color:var(--accent, #8B7BFF)">→</span> retrieve <span style="color:var(--accent, #8B7BFF)">→</span> reason <span style="color:var(--accent, #8B7BFF)">→</span> act <span style="color:var(--accent, #8B7BFF)">→</span> ship <span style="color:var(--accent, #8B7BFF)">→</span> explain <span style="color:var(--accent, #8B7BFF)">→</span> repeat <span style="color:var(--accent, #8B7BFF)">→</span> plan <span style="color:var(--accent, #8B7BFF)">→</span> retrieve <span style="color:var(--accent, #8B7BFF)">→</span> reason <span style="color:var(--accent, #8B7BFF)">→</span> act <span style="color:var(--accent, #8B7BFF)">→</span> ship <span style="color:var(--accent, #8B7BFF)">→</span> explain <span style="color:var(--accent, #8B7BFF)">→</span> repeat <span style="color:var(--accent, #8B7BFF)">→</span></span>
+    </div>
+  </div>
+
+  <section id="story" data-screen-label="My story" style="position:relative;padding:clamp(48px,7vw,96px) clamp(18px,5vw,64px);max-width:1240px;margin:0 auto">
+    <div aria-hidden="true" data-plx="0.06" style="position:absolute;top:-.08em;right:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(64px,14vw,180px);line-height:1;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.07);pointer-events:none;user-select:none;white-space:nowrap;will-change:transform">STORY</div>
+    <div data-reveal style="opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;display:flex;align-items:center;gap:14px;margin-bottom:clamp(28px,4vw,44px)">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--accent, #8B7BFF);animation:pulse 3s ease-in-out infinite"></span>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(26px,3.6vw,40px);letter-spacing:-.03em;margin:0">My story</h2>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#6E6862">[retrieving: story]</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:clamp(28px,4.5vw,60px);align-items:flex-start">
+      <div data-reveal data-d="120" style="opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;flex:1 1 300px;min-width:min(100%,260px);max-width:400px">
+        <div data-plx="0.045" style="will-change:transform">
+          <image-slot id="story-photo" shape="rounded" radius="16" style="width:100%;aspect-ratio:4/5;display:block" placeholder="a photo of Krishna"></image-slot>
+          <div style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6E6862">[context: ichalkaranji → mumbai]</div>
+        </div>
+      </div>
+      <div style="flex:1 1 460px;min-width:min(100%,320px);display:flex;flex-direction:column;gap:20px;font-size:clamp(15px,1.55vw,16.5px);line-height:1.75;color:#B5AEA5;font-weight:300;max-width:62ch">
+        <p data-lit style="opacity:.15;margin:0;text-wrap:pretty">I grew up in Ichalkaranji, inside my father's textile manufacturing world — yarn in, fabric out, a dozen moving parts in between. I didn't know the word "systems" yet, but I remember constantly thinking: <em style="color:#D9D3CB">someone should really instrument all of this.</em></p>
+        <p data-lit style="opacity:.15;margin:0;text-wrap:pretty">At IIT Bombay I studied chemical engineering on paper and built software in practice. I led one of the institute's largest developer communities and shipped features on an app that ten thousand students carried in their pockets. That's where I learned I care less about any one technology and more about the moment a thing I built becomes something people actually use.</p>
+        <p data-lit style="opacity:.15;margin:0;text-wrap:pretty">I tried founding twice before graduating. The first venture made real money building apps and websites for clients — and ended over a co-founder conflict that taught me my most expensive lesson: who you build with matters more than what you build. The second was a vertical AI startup doing retrieval over chemical-industry knowledge, before RAG was a buzzword. It won a government-backed grant, survived twenty customer discovery interviews, and then watched generalist AI products eat its market. Lesson two: timing is a co-founder you don't get to choose.</p>
+        <p data-lit style="opacity:.15;margin:0;text-wrap:pretty">These days I build AI systems at enterprise scale — multi-agent products that turn messy consumer data into decisions — and personal AI agents that run my own life, from a Telegram bot that argues with me about my stock portfolio to dashboards that track everything I care about. Somewhere along the way I started explaining all of this on camera, and <a href="https://instagram.com/inthe_blur" target="_blank" rel="noopener">@inthe_blur</a> became its own kind of build.</p>
+        <p data-lit style="opacity:.15;margin:0;color:#EDEAE4;font-weight:400;text-wrap:pretty">Where is this going? Toward building something of my own. I've known that since Ichalkaranji.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="builds" data-screen-label="Builds" style="position:relative;padding:clamp(48px,7vw,96px) clamp(18px,5vw,64px);max-width:1240px;margin:0 auto">
+    <div aria-hidden="true" data-plx="0.06" style="position:absolute;top:-.08em;right:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(64px,14vw,180px);line-height:1;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.07);pointer-events:none;user-select:none;white-space:nowrap;will-change:transform">BUILDS</div>
+    <div data-reveal style="opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:clamp(28px,4vw,44px)">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--accent, #8B7BFF);animation:pulse 3s ease-in-out infinite"></span>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(26px,3.6vw,40px);letter-spacing:-.03em;margin:0">Builds</h2>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#6E6862">[retrieving: 5 nodes]</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:clamp(28px,5vh,48px);max-width:880px">
+
+      <article data-tilt data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease,border-color .25s ease,background .25s ease;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:#131211;padding:clamp(24px,3vw,36px);display:flex;flex-direction:column;gap:14px;position:sticky;top:clamp(84px,13vh,130px);box-shadow:0 -18px 50px rgba(0,0,0,.45)" style-hover="border-color:var(--accent-line, rgba(139,123,255,.38));background:#161413">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px">
+          <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:999px;border:1px solid var(--accent-line, rgba(139,123,255,.38));color:#D9D3CB"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent, #8B7BFF);box-shadow:0 0 8px var(--accent, #8B7BFF)"></span>shipped</span>
+          <span style="color:#6E6862">[agent: portfolio-analysis]</span>
+        </div>
+        <h3 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(19px,2vw,23px);letter-spacing:-.02em;margin:0;line-height:1.2">The stock agent that argues with me</h3>
+        <p style="margin:0;font-size:14.5px;line-height:1.65;color:#A29B93;font-weight:300;text-wrap:pretty">I built a Telegram agent that runs LLM-powered hold/sell analysis over my equity positions and pushes its recommendations to chat — with reasoning I can push back on. I built it because I kept making emotional decisions about stocks, and I wanted to see whether an agent could be the least emotional member of my portfolio committee.</p>
+        <p style="margin:auto 0 0;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);font-size:13.5px;line-height:1.55;color:#D9D3CB"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent, #8B7BFF)">learned&nbsp;→&nbsp;</span>Building an agent for a decision you personally care about teaches you more than ten demos.</p>
+      </article>
+
+      <article data-tilt data-reveal data-d="80" style="opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease,border-color .25s ease,background .25s ease;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:#131211;padding:clamp(24px,3vw,36px);display:flex;flex-direction:column;gap:14px;position:sticky;top:clamp(84px,13vh,130px);box-shadow:0 -18px 50px rgba(0,0,0,.45)" style-hover="border-color:var(--accent-line, rgba(139,123,255,.38));background:#161413">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px">
+          <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:999px;border:1px solid var(--accent-line, rgba(139,123,255,.38));color:#D9D3CB"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent, #8B7BFF);box-shadow:0 0 8px var(--accent, #8B7BFF)"></span>shipped</span>
+          <span style="color:#6E6862">[agents: 5+ orchestrated]</span>
+        </div>
+        <h3 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(19px,2vw,23px);letter-spacing:-.02em;margin:0;line-height:1.2">Enterprise copilot, many brains</h3>
+        <p style="margin:0;font-size:14.5px;line-height:1.65;color:#A29B93;font-weight:300;text-wrap:pretty">At work I helped architect a multi-agent copilot — one master agent orchestrating specialized sub-agents over different consumer-data signals, so brand teams can just <em style="color:#D9D3CB;font-style:italic">ask</em> instead of dig. I built one of the sub-agents end to end: retrieval design, prompts, evals, integrations. It's live in pilot across 10+ brand categories.</p>
+        <p style="margin:auto 0 0;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);font-size:13.5px;line-height:1.55;color:#D9D3CB"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent, #8B7BFF)">learned&nbsp;→&nbsp;</span>The hard part of agents isn't the model — it's deciding what "correct" means and testing for it.</p>
+      </article>
+
+      <article data-tilt data-reveal data-d="160" style="opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease,border-color .25s ease,background .25s ease;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:#131211;padding:clamp(24px,3vw,36px);display:flex;flex-direction:column;gap:14px;position:sticky;top:clamp(84px,13vh,130px);box-shadow:0 -18px 50px rgba(0,0,0,.45)" style-hover="border-color:rgba(255,255,255,.2);background:#161413">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px">
+          <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);color:#8F8981"><span style="width:6px;height:6px;border-radius:50%;background:#6E6862"></span>archived</span>
+          <span style="color:#6E6862">[retrieval: chemical-industry]</span>
+        </div>
+        <h3 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(19px,2vw,23px);letter-spacing:-.02em;margin:0;line-height:1.2">A RAG startup, before it was cool</h3>
+        <p style="margin:0;font-size:14.5px;line-height:1.65;color:#A29B93;font-weight:300;text-wrap:pretty">In final year I co-founded a vertical AI startup unifying chemical R&D literature and compliance documents into one retrieval layer. We ran 20+ customer discovery interviews and won a ₹5 lakh non-dilutive grant from IIT Bombay's incubation program. Then generalist AI search products matured faster than our vertical moat did, and we shut it down on purpose.</p>
+        <p style="margin:auto 0 0;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);font-size:13.5px;line-height:1.55;color:#D9D3CB"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent, #8B7BFF)">learned&nbsp;→&nbsp;</span>A good idea with bad timing is indistinguishable from a bad idea — until you do the post-mortem honestly.</p>
+      </article>
+
+      <article data-tilt data-reveal data-d="240" style="opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease,border-color .25s ease,background .25s ease;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:#131211;padding:clamp(24px,3vw,36px);display:flex;flex-direction:column;gap:14px;position:sticky;top:clamp(84px,13vh,130px);box-shadow:0 -18px 50px rgba(0,0,0,.45)" style-hover="border-color:var(--accent-line, rgba(139,123,255,.38));background:#161413">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px">
+          <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:999px;border:1px solid var(--accent-line, rgba(139,123,255,.38));color:#D9D3CB"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent, #8B7BFF);box-shadow:0 0 8px var(--accent, #8B7BFF)"></span>shipped</span>
+          <span style="color:#6E6862">[users: 10,000+]</span>
+        </div>
+        <h3 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(19px,2vw,23px);letter-spacing:-.02em;margin:0;line-height:1.2">InstiApp — an app for a whole campus</h3>
+        <p style="margin:0;font-size:14.5px;line-height:1.65;color:#A29B93;font-weight:300;text-wrap:pretty">As project lead of IIT Bombay's developer community, I owned the institute super-app used by 10K+ students — leading 25+ developers, shipping a buy-and-sell marketplace and in-map campus navigation, and learning that roadmap arguments between 25 smart people are a product skill of their own.</p>
+        <p style="margin:auto 0 0;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);font-size:13.5px;line-height:1.55;color:#D9D3CB"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent, #8B7BFF)">learned&nbsp;→&nbsp;</span>Users don't care what your team argued about. They care that the app opens fast.</p>
+      </article>
+
+      <article data-tilt data-reveal data-d="320" style="opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease,border-color .25s ease,background .25s ease;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:#131211;padding:clamp(24px,3vw,36px);display:flex;flex-direction:column;gap:14px;position:sticky;top:clamp(84px,13vh,130px);box-shadow:0 -18px 50px rgba(0,0,0,.45)" style-hover="border-color:rgba(255,255,255,.2);background:#161413">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px">
+          <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);color:#8F8981"><span style="width:6px;height:6px;border-radius:50%;background:#6E6862"></span>paused</span>
+          <span style="color:#6E6862">[hardware: loom-sensors]</span>
+        </div>
+        <h3 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(19px,2vw,23px);letter-spacing:-.02em;margin:0;line-height:1.2">The loom dashboard</h3>
+        <p style="margin:0;font-size:14.5px;line-height:1.65;color:#A29B93;font-weight:300;text-wrap:pretty">An early-stage concept from where it all started: a mobile dashboard for textile loom owners — like my father — to watch production output and efficiency in real time. It's a sketch and a conviction, not a product yet. Paused deliberately while other builds take priority; some ideas wait for their moment.</p>
+        <p style="margin:auto 0 0;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);font-size:13.5px;line-height:1.55;color:#D9D3CB"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent, #8B7BFF)">learned&nbsp;→&nbsp;</span>The problems you grew up next to are the ones you understand at a level no market research can reach.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="notebook" data-screen-label="Notebook" style="position:relative;padding:clamp(48px,7vw,96px) clamp(18px,5vw,64px);max-width:920px;margin:0 auto">
+    <div aria-hidden="true" data-plx="0.06" style="position:absolute;top:-.08em;right:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(56px,12vw,150px);line-height:1;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.07);pointer-events:none;user-select:none;white-space:nowrap;will-change:transform">NOTES</div>
+    <div data-reveal style="opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:12px">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--accent, #8B7BFF);animation:pulse 3s ease-in-out infinite"></span>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(26px,3.6vw,40px);letter-spacing:-.03em;margin:0">Notebook</h2>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#6E6862">[running: beliefs]</span>
+    </div>
+    <p data-reveal style="opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;margin:0 0 clamp(26px,4vw,40px);color:#A29B93;font-weight:300;font-size:15.5px">Things I believe, learned the expensive way or the lucky way.</p>
+    <div style="display:flex;flex-direction:column">
+      <div data-reveal style="opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;display:flex;gap:clamp(16px,3vw,28px);padding:18px 0;border-top:1px solid rgba(255,255,255,.07)"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent, #8B7BFF);padding-top:3px">01</span><p style="margin:0;font-size:clamp(15.5px,1.7vw,18px);line-height:1.6;color:#D9D3CB;text-wrap:pretty">More important than what you do is who you do it with.</p></div>
+      <div data-reveal data-d="60" style="opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;display:flex;gap:clamp(16px,3vw,28px);padding:18px 0;border-top:1px solid rgba(255,255,255,.07)"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent, #8B7BFF);padding-top:3px">02</span><p style="margin:0;font-size:clamp(15.5px,1.7vw,18px);line-height:1.6;color:#D9D3CB;text-wrap:pretty">If I can't explain a system simply, I don't understand it yet — that's half the reason I make content.</p></div>
+      <div data-reveal data-d="120" style="opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;display:flex;gap:clamp(16px,3vw,28px);padding:18px 0;border-top:1px solid rgba(255,255,255,.07)"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent, #8B7BFF);padding-top:3px">03</span><p style="margin:0;font-size:clamp(15.5px,1.7vw,18px);line-height:1.6;color:#D9D3CB;text-wrap:pretty">Agents are leverage, not magic. The boring parts — evals, retrieval, failure cases — are the product.</p></div>
+      <div data-reveal data-d="180" style="opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;display:flex;gap:clamp(16px,3vw,28px);padding:18px 0;border-top:1px solid rgba(255,255,255,.07)"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent, #8B7BFF);padding-top:3px">04</span><p style="margin:0;font-size:clamp(15.5px,1.7vw,18px);line-height:1.6;color:#D9D3CB;text-wrap:pretty">Timing is a co-founder you don't get to choose.</p></div>
+      <div data-reveal data-d="240" style="opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;display:flex;gap:clamp(16px,3vw,28px);padding:18px 0;border-top:1px solid rgba(255,255,255,.07)"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent, #8B7BFF);padding-top:3px">05</span><p style="margin:0;font-size:clamp(15.5px,1.7vw,18px);line-height:1.6;color:#D9D3CB;text-wrap:pretty">Ship something people use, however small. One real user beats a hundred impressed onlookers.</p></div>
+      <div data-reveal data-d="300" style="opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;display:flex;gap:clamp(16px,3vw,28px);padding:18px 0;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07)"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent, #8B7BFF);padding-top:3px">06</span><p style="margin:0;font-size:clamp(15.5px,1.7vw,18px);line-height:1.6;color:#D9D3CB;text-wrap:pretty">Instrument everything. What gets measured gets improved; what gets automated gets done.</p></div>
+    </div>
+  </section>
+
+  <section id="creator" data-screen-label="@inthe_blur" style="position:relative;padding:clamp(48px,7vw,96px) clamp(18px,5vw,64px);max-width:1240px;margin:0 auto">
+    <div aria-hidden="true" data-plx="0.06" style="position:absolute;top:-.08em;right:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(64px,14vw,180px);line-height:1;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.07);pointer-events:none;user-select:none;white-space:nowrap;will-change:transform">BLUR</div>
+    <div data-reveal style="opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:12px">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--accent, #8B7BFF);animation:pulse 3s ease-in-out infinite"></span>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(26px,3.6vw,40px);letter-spacing:-.03em;margin:0">I also build an audience.</h2>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#6E6862">[publishing: @inthe_blur]</span>
+    </div>
+    <p data-reveal style="opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;margin:0 0 clamp(26px,4vw,40px);max-width:66ch;font-size:clamp(15px,1.55vw,16.5px);line-height:1.7;color:#A29B93;font-weight:300;text-wrap:pretty"><a href="https://instagram.com/inthe_blur" target="_blank" rel="noopener">@inthe_blur</a> is where I make dense AI and tech topics clear and practical — explainers, tool breakdowns, and builds in public. Technical enough for engineers, accessible enough for everyone else. It started as a forcing function ("do I actually understand this?") and became my favorite build.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:clamp(10px,1.4vw,16px)">
+      <a data-reveal href="https://instagram.com/inthe_blur" target="_blank" rel="noopener" style="opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;display:block;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08)" style-hover="border-color:var(--accent-line, rgba(139,123,255,.38))"><image-slot id="post-1" shape="rect" style="width:100%;aspect-ratio:4/5;display:block" placeholder="post 1"></image-slot></a>
+      <a data-reveal data-d="60" href="https://instagram.com/inthe_blur" target="_blank" rel="noopener" style="opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;display:block;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08)" style-hover="border-color:var(--accent-line, rgba(139,123,255,.38))"><image-slot id="post-2" shape="rect" style="width:100%;aspect-ratio:4/5;display:block" placeholder="post 2"></image-slot></a>
+      <a data-reveal data-d="120" href="https://instagram.com/inthe_blur" target="_blank" rel="noopener" style="opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;display:block;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08)" style-hover="border-color:var(--accent-line, rgba(139,123,255,.38))"><image-slot id="post-3" shape="rect" style="width:100%;aspect-ratio:4/5;display:block" placeholder="post 3"></image-slot></a>
+      <a data-reveal data-d="180" href="https://instagram.com/inthe_blur" target="_blank" rel="noopener" style="opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;display:block;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08)" style-hover="border-color:var(--accent-line, rgba(139,123,255,.38))"><image-slot id="post-4" shape="rect" style="width:100%;aspect-ratio:4/5;display:block" placeholder="post 4"></image-slot></a>
+      <a data-reveal data-d="240" href="https://instagram.com/inthe_blur" target="_blank" rel="noopener" style="opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;display:block;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08)" style-hover="border-color:var(--accent-line, rgba(139,123,255,.38))"><image-slot id="post-5" shape="rect" style="width:100%;aspect-ratio:4/5;display:block" placeholder="post 5"></image-slot></a>
+      <a data-reveal data-d="300" href="https://instagram.com/inthe_blur" target="_blank" rel="noopener" style="opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;display:block;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08)" style-hover="border-color:var(--accent-line, rgba(139,123,255,.38))"><image-slot id="post-6" shape="rect" style="width:100%;aspect-ratio:4/5;display:block" placeholder="post 6"></image-slot></a>
+    </div>
+    <div data-reveal style="opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;margin-top:22px"><a href="https://instagram.com/inthe_blur" target="_blank" rel="noopener" style="font-size:14px">Follow along → instagram.com/inthe_blur</a></div>
+  </section>
+
+  <section id="life" data-screen-label="Life" style="position:relative;padding:clamp(48px,7vw,96px) clamp(18px,5vw,64px);max-width:1100px;margin:0 auto">
+    <div aria-hidden="true" data-plx="0.06" style="position:absolute;top:-.08em;right:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(64px,14vw,180px);line-height:1;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.07);pointer-events:none;user-select:none;white-space:nowrap;will-change:transform">LIFE</div>
+    <div data-reveal style="opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:clamp(26px,4vw,40px)">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--accent, #8B7BFF);animation:pulse 3s ease-in-out infinite"></span>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(26px,3.6vw,40px);letter-spacing:-.03em;margin:0">10 things about me</h2>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#6E6862">[context: life]</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:10px clamp(20px,3vw,44px)">
+      <div data-reveal style="opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease;display:flex;gap:14px;padding:10px 0;font-size:14.5px;line-height:1.6;color:#B5AEA5;font-weight:300"><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent, #8B7BFF);padding-top:2px">01</span><span style="text-wrap:pretty">Gold medalist in triathlon at IIT Bombay's General Championship — swim, cycle, run, in Mumbai heat.</span></div>
+      <div data-reveal data-d="40" style="opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease;display:flex;gap:14px;padding:10px 0;font-size:14.5px;line-height:1.6;color:#B5AEA5;font-weight:300"><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent, #8B7BFF);padding-top:2px">02</span><span style="text-wrap:pretty">All India Rank 1 in a national Sanskrit Olympiad. Yes, Sanskrit.</span></div>
+      <div data-reveal data-d="80" style="opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease;display:flex;gap:14px;padding:10px 0;font-size:14.5px;line-height:1.6;color:#B5AEA5;font-weight:300"><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent, #8B7BFF);padding-top:2px">03</span><span style="text-wrap:pretty">Trained as a student mentor in the CBT-REBT counselling framework; mentored 10 freshmen through their first year.</span></div>
+      <div data-reveal data-d="120" style="opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease;display:flex;gap:14px;padding:10px 0;font-size:14.5px;line-height:1.6;color:#B5AEA5;font-weight:300"><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent, #8B7BFF);padding-top:2px">04</span><span style="text-wrap:pretty">Former Head Girl. I never quite stopped organizing things.</span></div>
+      <div data-reveal data-d="160" style="opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease;display:flex;gap:14px;padding:10px 0;font-size:14.5px;line-height:1.6;color:#B5AEA5;font-weight:300"><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent, #8B7BFF);padding-top:2px">05</span><span style="text-wrap:pretty">I grew up around looms and yarn markets in Ichalkaranji.</span></div>
+      <div data-reveal data-d="200" style="opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease;display:flex;gap:14px;padding:10px 0;font-size:14.5px;line-height:1.6;color:#B5AEA5;font-weight:300"><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent, #8B7BFF);padding-top:2px">06</span><span style="text-wrap:pretty">I sprint-raced at state level as a kid — 100m and 200m.</span></div>
+      <div data-reveal data-d="240" style="opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease;display:flex;gap:14px;padding:10px 0;font-size:14.5px;line-height:1.6;color:#B5AEA5;font-weight:300"><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent, #8B7BFF);padding-top:2px">07</span><span style="text-wrap:pretty">My first "products" were C++ games: Bubble Trouble with real gravity.</span></div>
+      <div data-reveal data-d="280" style="opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease;display:flex;gap:14px;padding:10px 0;font-size:14.5px;line-height:1.6;color:#B5AEA5;font-weight:300"><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent, #8B7BFF);padding-top:2px">08</span><span style="text-wrap:pretty">I've certified my way through Anthropic Academy — Claude, Claude Code, Cowork — because I use them daily anyway.</span></div>
+      <div data-reveal data-d="320" style="opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease;display:flex;gap:14px;padding:10px 0;font-size:14.5px;line-height:1.6;color:#B5AEA5;font-weight:300"><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent, #8B7BFF);padding-top:2px">09</span><span style="text-wrap:pretty">I keep a personal dashboard that tracks basically my whole life.</span></div>
+      <div data-reveal data-d="360" style="opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease;display:flex;gap:14px;padding:10px 0;font-size:14.5px;line-height:1.6;color:#B5AEA5;font-weight:300"><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent, #8B7BFF);padding-top:2px">10</span><span style="text-wrap:pretty">Long-term plan: build my own thing. Everything above is training.</span></div>
+    </div>
+  </section>
+
+  <section id="now" data-screen-label="Now" style="position:relative;padding:clamp(40px,6vw,80px) clamp(18px,5vw,64px);max-width:920px;margin:0 auto">
+    <div data-reveal style="opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:#131211;padding:clamp(22px,3vw,34px)">
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+        <span style="display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--accent-line, rgba(139,123,255,.38));color:#D9D3CB"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent, #8B7BFF);box-shadow:0 0 8px var(--accent, #8B7BFF);animation:breathe 2.5s ease-in-out infinite"></span>running</span>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(22px,2.8vw,30px);letter-spacing:-.03em;margin:0">Now</h2>
+        <span style="font-size:12.5px;color:#6E6862;font-style:italic">updated monthly — last: August 2026</span>
+      </div>
+      <p style="margin:0;font-size:clamp(15px,1.6vw,17px);line-height:1.7;color:#B5AEA5;font-weight:300;max-width:60ch;text-wrap:pretty">Building personal AI agents and shipping enterprise ones. Growing <a href="https://instagram.com/inthe_blur" target="_blank" rel="noopener">@inthe_blur</a>. Reading about vertical AI businesses. Slowly circling my next big build.</p>
+    </div>
+  </section>
+
+  <footer id="hi" data-screen-label="Say hi" style="position:relative;padding:clamp(56px,8vw,110px) clamp(18px,5vw,64px) 40px;max-width:1240px;margin:0 auto">
+    <div data-reveal style="opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;text-align:center;max-width:560px;margin:0 auto">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#6E6862;margin-bottom:18px">[final step: say hi]</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(30px,5vw,52px);letter-spacing:-.035em;margin:0 0 16px">Say hi<span style="color:var(--accent, #8B7BFF)">.</span></h2>
+      <p style="margin:0 0 30px;font-size:clamp(15px,1.6vw,16.5px);line-height:1.7;color:#A29B93;font-weight:300;text-wrap:pretty">Always up for conversations about AI, building things, or good ideas. The fastest way to reach me is Instagram DMs or email.</p>
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px">
+        <a data-magnet href="https://instagram.com/inthe_blur" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;padding:10px 18px;border-radius:999px;border:1px solid var(--accent-line, rgba(139,123,255,.38));background:var(--accent-fill, rgba(139,123,255,.1));color:#EDEAE4;font-size:13.5px" style-hover="background:var(--accent-dim, rgba(139,123,255,.3))">Instagram</a>
+        <a data-magnet href="https://www.linkedin.com/in/krishna-baldwa" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.1);color:#B5AEA5;font-size:13.5px" style-hover="border-color:rgba(255,255,255,.24);color:#EDEAE4">LinkedIn</a>
+        <a data-magnet href="https://github.com/Krishna-Baldwa" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.1);color:#B5AEA5;font-size:13.5px" style-hover="border-color:rgba(255,255,255,.24);color:#EDEAE4">GitHub</a>
+        <a data-magnet href="mailto:krishnabaldwa1101@gmail.com" style="display:inline-flex;align-items:center;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.1);color:#B5AEA5;font-size:13.5px" style-hover="border-color:rgba(255,255,255,.24);color:#EDEAE4">Email</a>
+      </div>
+    </div>
+    <div style="margin-top:clamp(48px,7vw,80px);padding-top:22px;border-top:1px solid rgba(255,255,255,.06);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:12.5px;color:#6E6862">
+      <span>© 2026 Krishna Baldwa</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px">This site was designed with AI, obviously.</span>
+    </div>
+  </footer>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;violet&quot;,&quot;teal&quot;],&quot;default&quot;:&quot;violet&quot;,&quot;tsType&quot;:&quot;'violet' | 'teal'&quot;,&quot;section&quot;:&quot;Theme&quot;}}">
+const THEMES = {
+  violet: { accent: '#8B7BFF', hi: '#A99BFF', line: 'rgba(139,123,255,.38)', fill: 'rgba(139,123,255,.10)', dim: 'rgba(139,123,255,.30)', glow: 'rgba(139,123,255,.16)' },
+  teal:   { accent: '#2FD8C0', hi: '#6FE7D6', line: 'rgba(47,216,192,.36)',  fill: 'rgba(47,216,192,.09)',  dim: 'rgba(47,216,192,.28)',  glow: 'rgba(47,216,192,.14)' }
+};
+const PLAN = '> plan: introduce krishna → show what she builds → say hi';
+
+class Component extends DCLogic {
+  state = {
+    accent: 'violet',
+    planLine: '',
+    active: 'top',
+    isMobile: typeof window !== 'undefined' && window.innerWidth < 760
+  };
+
+  static RAIL = [
+    ['top', 'TOP'], ['story', 'STORY'], ['builds', 'BUILDS'], ['notebook', 'NOTEBOOK'],
+    ['creator', 'BLUR'], ['life', 'LIFE'], ['now', 'NOW'], ['hi', 'SAY HI']
+  ];
+
+  applyTheme(name) {
+    const t = THEMES[name] || THEMES.violet;
+    const r = document.documentElement.style;
+    r.setProperty('--accent', t.accent);
+    r.setProperty('--accent-hi', t.hi);
+    r.setProperty('--accent-line', t.line);
+    r.setProperty('--accent-fill', t.fill);
+    r.setProperty('--accent-dim', t.dim);
+    r.setProperty('--accent-glow', t.glow);
+  }
+
+  componentDidMount() {
+    this.applyTheme(this.props.accent || this.state.accent);
+    if (this.props.accent && this.props.accent !== this.state.accent) this.setState({ accent: this.props.accent });
+
+    this._mq = window.matchMedia('(max-width: 759px)');
+    this._onMq = e => this.setState({ isMobile: e.matches });
+    this._mq.addEventListener('change', this._onMq);
+
+    this._reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (this._reduced) { this.setState({ planLine: PLAN }); }
+    else {
+      let i = 0;
+      this._t = setInterval(() => {
+        i += 1;
+        this.setState({ planLine: PLAN.slice(0, i) });
+        if (i >= PLAN.length) clearInterval(this._t);
+      }, 26);
+    }
+
+    this._io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          const el = en.target;
+          el.style.transitionDelay = (el.dataset.d || 0) + 'ms';
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+          this._io.unobserve(el);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+    this.scan();
+    this._rescan = setInterval(() => this.scan(), 600); // permanent — picks up re-rendered nodes
+    this._fallback = setTimeout(() => this.revealAll(), 4000);
+
+    // scroll-driven pipeline fill + parallax
+    this._onScroll = () => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => {
+        this._raf = null;
+        const doc = document.documentElement;
+        const max = doc.scrollHeight - window.innerHeight;
+        const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+        const fill = document.getElementById('pl-fill');
+        if (fill) fill.style.transform = 'scaleY(' + p + ')';
+        const yNow = window.scrollY;
+        this._vel = yNow - (this._lastY === undefined ? yNow : this._lastY);
+        this._lastY = yNow;
+        let cur = 'top';
+        Component.RAIL.forEach(([id]) => {
+          const el = document.getElementById(id);
+          if (el && el.offsetTop - window.innerHeight * 0.4 <= yNow) cur = id;
+        });
+        if (cur !== this.state.active) this.setState({ active: cur });
+        if (!this._reduced) {
+          const hero = document.querySelector('[data-hero-exit]');
+          if (hero) {
+            const y = window.scrollY;
+            hero.style.transform = 'translateY(' + (y * 0.16).toFixed(1) + 'px)';
+            hero.style.opacity = Math.max(0, 1 - y / 760).toFixed(3);
+          }
+          const vh = window.innerHeight;
+          document.querySelectorAll('[data-lit]').forEach(el => {
+            const r = el.getBoundingClientRect();
+            const t = Math.max(0, Math.min(1, (vh * 0.8 - r.top) / (vh * 0.38)));
+            el.style.opacity = (0.15 + 0.85 * t).toFixed(3);
+            el.style.transform = 'translateY(' + ((1 - t) * 22).toFixed(1) + 'px)';
+          });
+        }
+        if (!this._reduced) {
+          document.querySelectorAll('[data-plx]').forEach(el => {
+            const sp = parseFloat(el.dataset.plx) || 0;
+            const r = el.getBoundingClientRect();
+            const mid = r.top + r.height / 2 - window.innerHeight / 2;
+            el.style.transform = 'translateY(' + (mid * sp * -1).toFixed(1) + 'px)';
+          });
+        }
+      });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    this._onScroll();
+    if (!this._reduced) {
+      this.initSmooth();
+      this.initCanvas();
+      this.initSplit();
+      this.initTilt();
+      this.initDraw();
+      this.initMagnet();
+    } else {
+      document.querySelectorAll('[data-lit]').forEach(el => { el.style.opacity = '1'; });
+    }
+  }
+
+  initDraw() {
+    document.querySelectorAll('[data-draw] path').forEach((p, i) => {
+      try {
+        const L = p.getTotalLength();
+        p.style.strokeDasharray = L;
+        p.style.strokeDashoffset = L;
+        p.animate([{ strokeDashoffset: L }, { strokeDashoffset: 0 }], { duration: 900, delay: 250 + i * 110, easing: 'ease-out', fill: 'forwards' });
+        setTimeout(() => { p.style.strokeDasharray = ''; p.style.strokeDashoffset = ''; }, 250 + i * 110 + 950);
+      } catch (err) {}
+    });
+  }
+
+  initMagnet() {
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    document.querySelectorAll('[data-magnet]').forEach(el => {
+      el.addEventListener('mousemove', e => {
+        const r = el.getBoundingClientRect();
+        el.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * .3).toFixed(1) + 'px,' + ((e.clientY - r.top - r.height / 2) * .4).toFixed(1) + 'px)';
+      });
+      el.addEventListener('mouseleave', () => {
+        el.style.transition = 'transform .45s cubic-bezier(.2,.7,.3,1.4)';
+        el.style.transform = 'none';
+        setTimeout(() => { el.style.transition = ''; }, 500);
+      });
+    });
+  }
+
+  initSmooth() {
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    this._target = window.scrollY;
+    this._cur = window.scrollY;
+    this._onWheel = e => {
+      if (e.ctrlKey) return;
+      e.preventDefault();
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      this._target = Math.max(0, Math.min(max, this._target + e.deltaY));
+      if (!this._sraf) this._smoothLoop();
+    };
+    window.addEventListener('wheel', this._onWheel, { passive: false });
+    this._onNativeScroll = () => { if (!this._sraf) { this._target = window.scrollY; this._cur = window.scrollY; } };
+    window.addEventListener('scroll', this._onNativeScroll, { passive: true });
+  }
+
+  _smoothLoop() {
+    this._sraf = requestAnimationFrame(() => {
+      this._cur += (this._target - this._cur) * 0.105;
+      if (Math.abs(this._target - this._cur) < 0.5) {
+        this._cur = this._target;
+        this._sraf = null;
+        window.scrollTo({ top: this._cur, behavior: 'instant' });
+        return;
+      }
+      window.scrollTo({ top: this._cur, behavior: 'instant' });
+      this._smoothLoop();
+    });
+  }
+
+  initCanvas() {
+    const cv = document.getElementById('fx-canvas');
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
+    let w, h;
+    const size = () => {
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      w = window.innerWidth; h = window.innerHeight;
+      cv.width = w * dpr; cv.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    size();
+    this._onResize = size;
+    window.addEventListener('resize', size);
+    const N = Math.min(70, Math.max(28, Math.round(window.innerWidth * window.innerHeight / 24000)));
+    const pts = Array.from({ length: N }, () => ({
+      x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight,
+      vx: (Math.random() - .5) * .28, vy: (Math.random() - .5) * .28
+    }));
+    this._mouse = { x: -9999, y: -9999 };
+    this._onMove = e => {
+      this._mouse.x = e.clientX; this._mouse.y = e.clientY;
+      this._mxN = (e.clientX / window.innerWidth - .5) * 2;
+      this._myN = (e.clientY / window.innerHeight - .5) * 2;
+    };
+    window.addEventListener('mousemove', this._onMove);
+    const hexToRgb = hex => {
+      const n = parseInt(hex.trim().slice(1), 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    };
+    const loop = () => {
+      this._craf = requestAnimationFrame(loop);
+      if (document.hidden) return;
+      // scroll-velocity skew — the page "leans" while scrolling
+      const targetSkew = Math.max(-1.3, Math.min(1.3, (this._vel || 0) * 0.05));
+      this._skew = (this._skew || 0) + (targetSkew - this._skew) * 0.1;
+      this._vel = (this._vel || 0) * 0.88;
+      const lean = document.querySelectorAll('section, footer');
+      if (Math.abs(this._skew) > 0.004) {
+        lean.forEach(el => { el.style.transform = 'skewY(' + this._skew.toFixed(3) + 'deg)'; });
+        this._skewed = true;
+      } else if (this._skewed) {
+        lean.forEach(el => { el.style.transform = ''; });
+        this._skewed = false;
+      }
+      // mouse-parallax hero layers
+      this._pmx = (this._pmx || 0) + ((this._mxN || 0) - (this._pmx || 0)) * .05;
+      this._pmy = (this._pmy || 0) + ((this._myN || 0) - (this._pmy || 0)) * .05;
+      document.querySelectorAll('[data-mplx]').forEach(el => {
+        const f = parseFloat(el.dataset.mplx) || 10;
+        el.style.transform = 'translate3d(' + (this._pmx * f).toFixed(2) + 'px,' + (this._pmy * f * .7).toFixed(2) + 'px,0)';
+      });
+      let rgb;
+      try { rgb = hexToRgb(getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#8B7BFF'); }
+      catch (err) { rgb = [139, 123, 255]; }
+      const [r, g, b] = rgb;
+      ctx.clearRect(0, 0, w, h);
+      for (const p of pts) {
+        const dx = p.x - this._mouse.x, dy = p.y - this._mouse.y, d2 = dx * dx + dy * dy;
+        if (d2 < 16000) { const d = Math.sqrt(d2) + 1; p.vx += dx / d * .025; p.vy += dy / d * .025; }
+        p.vx *= .992; p.vy *= .992;
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < -20) p.x = w + 20; else if (p.x > w + 20) p.x = -20;
+        if (p.y < -20) p.y = h + 20; else if (p.y > h + 20) p.y = -20;
+        ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',.5)';
+        ctx.beginPath(); ctx.arc(p.x, p.y, 1.1, 0, 6.283); ctx.fill();
+      }
+      for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
+        const a = pts[i], c = pts[j], dx = a.x - c.x, dy = a.y - c.y, d = dx * dx + dy * dy;
+        if (d < 15000) {
+          ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + ((1 - d / 15000) * .15).toFixed(3) + ')';
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(c.x, c.y); ctx.stroke();
+        }
+      }
+    };
+    loop();
+  }
+
+  initSplit() {
+    const el = document.querySelector('[data-splitrev]');
+    if (!el || el.dataset.split) return;
+    el.dataset.split = '1';
+    const originalHTML = el.innerHTML;
+    const spans = [];
+    const process = parent => {
+      Array.from(parent.childNodes).forEach(n => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(tok => {
+            if (!tok) return;
+            if (/^\s+$/.test(tok)) { frag.appendChild(document.createTextNode(tok)); return; }
+            const outer = document.createElement('span');
+            outer.style.display = 'inline-block'; outer.style.overflow = 'hidden'; outer.style.verticalAlign = 'top';
+            const inner = document.createElement('span');
+            inner.style.display = 'inline-block'; inner.textContent = tok;
+            outer.appendChild(inner); frag.appendChild(outer); spans.push(inner);
+          });
+          parent.replaceChild(frag, n);
+        } else if (n.nodeType === 1) process(n);
+      });
+    };
+    process(el);
+    spans.forEach((s, i) => s.animate(
+      [{ transform: 'translateY(110%)', opacity: 0 }, { transform: 'translateY(0)', opacity: 1 }],
+      { duration: 720, delay: 150 + i * 60, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'backwards' }
+    ));
+    // restore canonical markup once the intro finishes
+    this._splitRestore = setTimeout(() => { el.innerHTML = originalHTML; }, 150 + spans.length * 60 + 800);
+  }
+
+  initTilt() {
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    document.querySelectorAll('[data-tilt]').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        if (card.style.opacity !== '1') return;
+        const r = card.getBoundingClientRect();
+        const rx = ((e.clientY - r.top) / r.height - .5) * -4;
+        const ry = ((e.clientX - r.left) / r.width - .5) * 4;
+        card.style.transition = 'border-color .25s ease, background .25s ease';
+        card.style.transform = 'perspective(800px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) translateY(-3px)';
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transition = 'transform .5s cubic-bezier(.2,.7,.2,1), border-color .25s ease, background .25s ease';
+        card.style.transform = 'none';
+      });
+    });
+  }
+
+  componentDidUpdate(prev) {
+    if (this.props.accent && this.props.accent !== prev.accent) {
+      this.setState({ accent: this.props.accent });
+      this.applyTheme(this.props.accent);
+    }
+    this.scan();
+  }
+
+  scan() {
+    if (!this._io) return;
+    document.querySelectorAll('[data-reveal]').forEach(el => {
+      if (el.dataset.revealed) return;
+      el.dataset.revealed = '1';
+      this._io.observe(el);
+    });
+  }
+
+  revealAll() {
+    document.querySelectorAll('[data-reveal]').forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight) { el.style.opacity = '1'; el.style.transform = 'none'; }
+      else if (!el.dataset.revealed) { this._io.observe(el); el.dataset.revealed = '1'; }
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._t);
+    clearInterval(this._rescan);
+    clearTimeout(this._fallback);
+    if (this._raf) cancelAnimationFrame(this._raf);
+    if (this._sraf) cancelAnimationFrame(this._sraf);
+    if (this._craf) cancelAnimationFrame(this._craf);
+    window.removeEventListener('scroll', this._onScroll);
+    if (this._onWheel) window.removeEventListener('wheel', this._onWheel);
+    if (this._onNativeScroll) window.removeEventListener('scroll', this._onNativeScroll);
+    if (this._onResize) window.removeEventListener('resize', this._onResize);
+    if (this._onMove) window.removeEventListener('mousemove', this._onMove);
+    clearTimeout(this._splitRestore);
+    if (this._io) this._io.disconnect();
+    if (this._mq) this._mq.removeEventListener('change', this._onMq);
+  }
+
+  pick(name) {
+    this.setState({ accent: name });
+    this.applyTheme(name);
+  }
+
+  btnStyle(name) {
+    const on = this.state.accent === name;
+    const t = THEMES[name];
+    return {
+      appearance: 'none', cursor: 'pointer', font: 'inherit', letterSpacing: '.04em',
+      padding: '5px 11px', borderRadius: '999px',
+      border: on ? '1px solid ' + t.line : '1px solid transparent',
+      background: on ? t.fill : 'transparent',
+      color: on ? t.accent : '#7E7872'
+    };
+  }
+
+  renderVals() {
+    const railItems = Component.RAIL.map(([id, label]) => ({
+      href: '#' + id,
+      label: (this.state.active === id ? '● ' : '') + label,
+      style: {
+        fontFamily: "'JetBrains Mono', monospace", fontSize: '9.5px', letterSpacing: '.16em',
+        color: this.state.active === id ? 'var(--accent, #8B7BFF)' : '#5E5852',
+        transition: 'color .3s ease', textDecoration: 'none'
+      }
+    }));
+    return {
+      railItems,
+      planLine: this.state.planLine,
+      isMobile: this.state.isMobile,
+      isDesktop: !this.state.isMobile,
+      pickViolet: () => this.pick('violet'),
+      pickTeal: () => this.pick('teal'),
+      violetBtn: this.btnStyle('violet'),
+      tealBtn: this.btnStyle('teal')
+    };
+  }
+}
+
+</script>
+</body>
+</html>
