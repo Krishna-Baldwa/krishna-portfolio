@@ -4,7 +4,7 @@ import { useScrollReveal } from "../../hooks/useScrollReveal";
 
 export function Now() {
   const ref = useRef<HTMLDivElement>(null);
-  useScrollReveal(ref);
+  useScrollReveal(ref, { scrub: true });
 
   return (
     <section id="now" ref={ref} className="relative mx-auto max-w-[920px] px-[clamp(18px,5vw,64px)] py-[clamp(40px,6vw,80px)]">

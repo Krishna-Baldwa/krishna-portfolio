@@ -6,7 +6,7 @@ import { useScrollReveal } from "../../hooks/useScrollReveal";
 
 export function Life() {
   const ref = useRef<HTMLDivElement>(null);
-  useScrollReveal(ref, { y: 14, stagger: 0.05 });
+  useScrollReveal(ref, { y: 14, scrub: true });
 
   return (
     <section

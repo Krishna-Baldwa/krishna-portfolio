@@ -6,7 +6,7 @@ import { useScrollReveal } from "../../hooks/useScrollReveal";
 
 export function Notebook() {
   const ref = useRef<HTMLDivElement>(null);
-  useScrollReveal(ref, { y: 16, stagger: 0.07 });
+  useScrollReveal(ref, { y: 16, scrub: true });
 
   return (
     <section

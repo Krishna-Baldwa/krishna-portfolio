@@ -5,7 +5,7 @@ import { useScrollReveal } from "../../hooks/useScrollReveal";
 
 export function Connect() {
   const ref = useRef<HTMLDivElement>(null);
-  useScrollReveal(ref, { y: 16 });
+  useScrollReveal(ref, { y: 16, scrub: true });
 
   return (
     <footer

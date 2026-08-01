@@ -7,7 +7,7 @@ import { useScrollReveal } from "../../hooks/useScrollReveal";
 
 export function Broadcast() {
   const ref = useRef<HTMLDivElement>(null);
-  useScrollReveal(ref, { y: 18 });
+  useScrollReveal(ref, { y: 18, scrub: true });
 
   return (
     <section
