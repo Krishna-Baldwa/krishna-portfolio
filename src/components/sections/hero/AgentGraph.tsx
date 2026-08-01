@@ -68,6 +68,34 @@ export function AgentGraph() {
         ease: "sine.inOut",
         stagger: { each: 0.3, repeat: -1 },
       });
+
+      // The signature "loud" moment: a bright signal literally travels the
+      // wiring, continuously, so the graph reads as a live system rather
+      // than a static illustration.
+      const pulses = gsap.utils.toArray<SVGCircleElement>("[data-graph-pulse]", ref.current);
+      pulses.forEach((pulse, i) => {
+        const path = paths[i % paths.length];
+        gsap.to(pulse, {
+          motionPath: { path, align: path },
+          repeat: -1,
+          duration: 2.2,
+          delay: i * 0.5,
+          ease: "power1.inOut",
+        });
+        gsap.fromTo(
+          pulse,
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: 0.35,
+            repeat: -1,
+            repeatDelay: 1.85,
+            delay: i * 0.5,
+            yoyo: true,
+            ease: "sine.inOut",
+          },
+        );
+      });
     },
     { scope: ref, dependencies: [prefersReducedMotion] },
   );
@@ -76,10 +104,19 @@ export function AgentGraph() {
     <svg
       ref={ref}
       viewBox="0 0 1080 360"
-      className="block h-auto w-full"
+      className="block h-auto w-full overflow-visible"
       role="img"
       aria-label="Diagram: an idea and messy data flow through plan, retrieve, reason, act, into a shipped product, a post, and an insight"
     >
+      <defs>
+        <filter id="graph-glow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="4.2" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
       <g stroke="#ffffff1c" fill="none" strokeWidth="1">
         {PATHS.map((d) => (
           <path key={d} d={d} />
@@ -90,6 +127,13 @@ export function AgentGraph() {
           <path key={d} d={d} data-graph-path />
         ))}
       </g>
+      {!prefersReducedMotion && (
+        <g filter="url(#graph-glow)">
+          {PATHS.map((d, i) => (
+            <circle key={d} r="3.2" fill="var(--accent-hi)" opacity="0" data-graph-pulse data-graph-pulse-index={i} />
+          ))}
+        </g>
+      )}
       <g fontFamily="var(--font-body)" fontSize="13.5" textAnchor="middle">
         {NODES.filter((n) => n.dim).map((n) => (
           <g key={n.label}>

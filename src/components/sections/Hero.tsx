@@ -65,13 +65,13 @@ export function Hero() {
     <header
       id="top"
       ref={containerRef}
-      className="relative mx-auto max-w-[1240px] px-[clamp(18px,5vw,64px)] pt-[clamp(96px,12vw,140px)] pb-[clamp(56px,8vw,110px)]"
+      className="relative isolate mx-auto max-w-[1240px] px-[clamp(18px,5vw,64px)] pt-[clamp(96px,12vw,140px)] pb-[clamp(56px,8vw,110px)]"
     >
       <div className="absolute inset-x-0 top-0 -z-10 h-[120%]">
         <HeroField />
       </div>
 
-      <div className="flex flex-wrap items-start gap-[clamp(28px,5vw,64px)]">
+      <div className="flex min-h-[clamp(420px,52vw,620px)] flex-wrap items-center gap-[clamp(28px,5vw,64px)]">
         <div className="min-w-[min(100%,320px)] flex-[1_1_380px]">
           <div className="mb-6 flex items-center gap-3.5">
             <PhotoFrame shape="circle" className="h-[104px] w-[104px] shrink-0" />
@@ -126,10 +126,17 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="min-w-[min(100%,300px)] flex-[1_1_480px] self-center">
-          <AgentGraph />
-          <div className="mt-3.5 text-center font-mono text-[10.5px]" style={{ color: "var(--color-ink-faint)" }}>
-            [graph: how a thing gets built]
+        <div className="relative min-w-[min(100%,300px)] flex-[1_1_520px]">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-1/2 left-1/2 h-[140%] w-[140%] -translate-x-1/2 -translate-y-1/2 opacity-70 blur-3xl"
+            style={{ background: "radial-gradient(closest-side, var(--accent-glow), transparent 70%)" }}
+          />
+          <div className="relative">
+            <AgentGraph />
+            <div className="mt-3.5 text-center font-mono text-[10.5px]" style={{ color: "var(--color-ink-faint)" }}>
+              [graph: how a thing gets built]
+            </div>
           </div>
         </div>
       </div>
