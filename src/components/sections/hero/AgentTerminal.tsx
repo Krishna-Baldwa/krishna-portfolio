@@ -82,7 +82,7 @@ const LINE_PAUSE_MS = 260;
 const PENDING_MS = 620;
 const SCENARIO_PAUSE_MS = 1500;
 const EXIT_MS = 250;
-const MAX_VISIBLE_LINES = 7;
+const MAX_VISIBLE_LINES = 11;
 
 function toLineItem(id: number, line: ScriptLine): LineItem {
   return { id, role: line.role, text: line.text };
@@ -216,7 +216,7 @@ export function AgentTerminal() {
           </span>
         </div>
 
-        <div className="flex h-[168px] flex-col justify-end gap-[7px] overflow-hidden font-mono text-[12px] leading-[1.5]">
+        <div className="flex h-[264px] flex-col justify-end gap-[7px] overflow-hidden font-mono text-[12.5px] leading-[1.55]">
           {lines.map((line, i) => (
             <div
               key={line.id}
