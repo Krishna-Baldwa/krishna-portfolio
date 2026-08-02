@@ -1,10 +1,18 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NAV_STEPS } from "../../content/copy";
 import { useScrollSpy } from "../../hooks/useScrollSpy";
 import { useLenis } from "../../hooks/useLenis";
 import { gsap, ScrollTrigger, useGSAP } from "../../lib/gsap";
 
 type ThemeMode = "dark" | "light";
+
+// Violet is the one constant brand accent now — dark/light no longer
+// varies it. This list only exists to scrub a legacy failure mode: an
+// earlier build let a violet/teal accent switch set these as inline
+// styles on <html>, and inline styles outlive a JS hot-reload (they're
+// raw DOM mutations React never owned), so a stray teal override could
+// persist in an old tab even after the switcher itself was removed.
+const LEGACY_ACCENT_PROPS = ["--accent", "--accent-hi", "--accent-line", "--accent-fill", "--accent-dim", "--accent-glow"];
 
 const SECTION_IDS = NAV_STEPS.map((step) => step.id);
 
@@ -15,6 +23,10 @@ export function StatusBarNav() {
   const lenis = useLenis();
   const fillRef = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<ThemeMode>("dark");
+
+  useEffect(() => {
+    LEGACY_ACCENT_PROPS.forEach((prop) => document.documentElement.style.removeProperty(prop));
+  }, []);
 
   // Thin top-edge fill tracks overall document scroll progress — the
   // "trace" line for the whole page, distinct from any per-section motion.

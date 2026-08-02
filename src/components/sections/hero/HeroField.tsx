@@ -3,7 +3,7 @@ import { usePrefersReducedMotion } from "../../../hooks/usePrefersReducedMotion"
 
 /** Ambient particle field scoped to the hero viewport — accent-colored dots
  * drifting with proximity links, reading the live `--accent` custom property
- * so it stays in sync with the violet/teal trace toggle. */
+ * so it stays in sync if the brand accent ever changes. */
 export function HeroField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
