@@ -1,18 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { HERO } from "../../content/copy";
-import { PROJECTS } from "../../content/projects";
 import { HeroField } from "./hero/HeroField";
+import { AgentTerminal } from "./hero/AgentTerminal";
 import { MagneticLink } from "../ui/Magnetic";
 import { PhotoFrame } from "../ui/PhotoFrame";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 import { gsap, useGSAP } from "../../lib/gsap";
-
-// Curated, not just the first N — the three strongest shipped signals,
-// so the panel reads as proof rather than a random slice of the list.
-const FEATURED_BUILD_IDS = ["enterprise-copilot", "instiapp", "stock-agent"];
-const FEATURED_BUILDS = FEATURED_BUILD_IDS.map((id) => PROJECTS.find((p) => p.id === id)).filter(
-  (p): p is (typeof PROJECTS)[number] => Boolean(p),
-);
 
 /** A small typing detail next to the avatar — decorative only. It never
  * gates the headline: name/role/credibility render immediately on mount
@@ -130,45 +123,8 @@ export function Hero() {
           </div>
         </div>
 
-        <aside className="hidden w-[300px] shrink-0 lg:block">
-          <div className="rounded-2xl p-5" style={{ border: "1px solid var(--color-line)", background: "var(--color-canvas-raised)" }}>
-            <div className="mb-3 flex items-center justify-between font-mono text-[11px]" style={{ color: "var(--color-ink-faint)" }}>
-              <span>[recent_builds]</span>
-              <span style={{ color: "var(--accent)" }}>{PROJECTS.length} total</span>
-            </div>
-
-            <div className="flex flex-col">
-              {FEATURED_BUILDS.map((project) => (
-                <MagneticLink
-                  key={project.id}
-                  href={project.links?.[0]?.href ?? "#builds"}
-                  target={project.links?.[0]?.href ? "_blank" : undefined}
-                  rel={project.links?.[0]?.href ? "noopener" : undefined}
-                  pull={0.15}
-                  className="group -mx-2 flex items-start gap-3 rounded-lg px-2 py-[9px] transition-colors hover:bg-white/[0.03]"
-                >
-                  <span className="mt-[6px] h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: "var(--accent)" }} />
-                  <span className="min-w-0">
-                    <span
-                      className="block text-[13.5px] leading-snug font-medium transition-colors group-hover:text-[color:var(--accent-hi)]"
-                      style={{ color: "var(--color-ink)" }}
-                    >
-                      {project.title}
-                    </span>
-                    <span className="block font-mono text-[10.5px]" style={{ color: "var(--color-ink-faint)" }}>
-                      [{project.tag}]
-                    </span>
-                  </span>
-                </MagneticLink>
-              ))}
-            </div>
-
-            <div className="mt-2 pt-3" style={{ borderTop: "1px solid var(--color-line)" }}>
-              <MagneticLink href="#builds" className="font-mono text-[11.5px]" style={{ color: "var(--accent)" }}>
-                See all builds →
-              </MagneticLink>
-            </div>
-          </div>
+        <aside className="hidden w-[320px] shrink-0 lg:block">
+          <AgentTerminal />
         </aside>
       </div>
 
