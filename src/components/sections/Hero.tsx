@@ -123,7 +123,7 @@ export function Hero() {
           </div>
         </div>
 
-        <aside className="hidden w-[320px] shrink-0 lg:block">
+        <aside className="w-full min-w-[min(100%,320px)] lg:w-[320px] lg:shrink-0">
           <AgentTerminal />
         </aside>
       </div>
