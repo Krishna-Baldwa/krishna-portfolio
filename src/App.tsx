@@ -2,6 +2,7 @@ import { SmoothScrollProvider } from "./components/layout/SmoothScrollProvider";
 import { StatusBarNav } from "./components/layout/StatusBarNav";
 import { GrainOverlay } from "./components/layout/GrainOverlay";
 import { CustomCursor } from "./components/ui/CustomCursor";
+import { HeroField } from "./components/sections/hero/HeroField";
 import { Hero } from "./components/sections/Hero";
 import { Story } from "./components/sections/Story";
 import { Builds } from "./components/sections/Builds";
@@ -14,6 +15,9 @@ import { Connect } from "./components/sections/Connect";
 export default function App() {
   return (
     <SmoothScrollProvider>
+      <div aria-hidden="true" className="fixed inset-0 -z-10">
+        <HeroField />
+      </div>
       <GrainOverlay />
       <CustomCursor />
       <StatusBarNav />

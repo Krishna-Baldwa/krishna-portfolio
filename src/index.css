@@ -74,6 +74,11 @@
     color: var(--color-ink);
     font-family: var(--font-body);
     overflow-x: clip;
+    /* Roots one global stacking context so the fixed, negative-z particle
+       background (App.tsx) reliably sits behind section content instead of
+       escaping upward past it — the same class of bug the hero once hit
+       before it had its own `isolate`, now solved once for the whole page. */
+    isolation: isolate;
   }
 
   a {

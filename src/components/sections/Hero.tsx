@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { HERO } from "../../content/copy";
-import { HeroField } from "./hero/HeroField";
 import { AgentTerminal } from "./hero/AgentTerminal";
 import { MagneticLink } from "../ui/Magnetic";
 import { PhotoFrame } from "../ui/PhotoFrame";
@@ -61,10 +60,6 @@ export function Hero() {
       ref={containerRef}
       className="relative isolate mx-auto flex min-h-[100svh] max-w-[1240px] flex-col justify-center overflow-clip px-[clamp(18px,5vw,64px)] pt-[clamp(100px,12vw,148px)] pb-[clamp(64px,9vw,110px)]"
     >
-      <div aria-hidden="true" className="absolute inset-0 -z-10">
-        <HeroField />
-      </div>
-
       <div className="flex flex-wrap items-center gap-[clamp(32px,5vw,64px)]">
         <div className="min-w-[min(100%,320px)] max-w-[640px] flex-[1_1_460px]">
           <div className="mb-6 flex items-center gap-3.5">
