@@ -117,15 +117,50 @@ export function AgentGraph() {
           </feMerge>
         </filter>
       </defs>
-      <g stroke="#ffffff1c" fill="none" strokeWidth="1">
-        {PATHS.map((d) => (
-          <path key={d} d={d} />
-        ))}
-      </g>
-      <g stroke="var(--accent)" fill="none" strokeWidth="1.3" strokeLinecap="round">
-        {PATHS.map((d) => (
-          <path key={d} d={d} data-graph-path />
-        ))}
+      {/* The static wiring + nodes recede into atmosphere — only the
+          traveling pulses below stay at full strength, so the one thing
+          that reads clearly is the signal, not the diagram. */}
+      <g opacity="0.4">
+        <g stroke="#ffffff1c" fill="none" strokeWidth="1">
+          {PATHS.map((d) => (
+            <path key={d} d={d} />
+          ))}
+        </g>
+        <g stroke="var(--accent)" fill="none" strokeWidth="1.3" strokeLinecap="round">
+          {PATHS.map((d) => (
+            <path key={d} d={d} data-graph-path />
+          ))}
+        </g>
+        <g fontFamily="var(--font-body)" fontSize="13.5" textAnchor="middle">
+          {NODES.filter((n) => n.dim).map((n) => (
+            <g key={n.label}>
+              <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={n.h / 2} fill="#ffffff08" stroke="#ffffff1f" />
+              <text x={n.x + n.w / 2} y={n.y + n.h / 2 + 5} fill="#9a948b">
+                {n.label}
+              </text>
+            </g>
+          ))}
+        </g>
+        <g fontFamily="var(--font-mono)" fontSize="13">
+          {NODES.filter((n) => !n.dim && !n.out).map((n) => (
+            <g key={n.label} data-graph-node data-graph-active>
+              <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={13} fill="var(--accent-fill)" stroke="var(--accent-line)" />
+              <text x={n.x + n.w / 2} y={n.y + n.h / 2 + 4.5} textAnchor="middle" fill="var(--color-ink)">
+                {n.label}
+              </text>
+            </g>
+          ))}
+        </g>
+        <g fontFamily="var(--font-body)" fontSize="13.5" textAnchor="middle">
+          {NODES.filter((n) => n.out).map((n) => (
+            <g key={n.label} data-graph-node>
+              <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={n.h / 2} fill="var(--color-canvas-raised)" stroke="var(--accent-line)" />
+              <text x={n.x + n.w / 2} y={n.y + n.h / 2 + 5} fill="var(--color-ink)">
+                {n.label}
+              </text>
+            </g>
+          ))}
+        </g>
       </g>
       {!prefersReducedMotion && (
         <g filter="url(#graph-glow)">
@@ -134,36 +169,6 @@ export function AgentGraph() {
           ))}
         </g>
       )}
-      <g fontFamily="var(--font-body)" fontSize="13.5" textAnchor="middle">
-        {NODES.filter((n) => n.dim).map((n) => (
-          <g key={n.label}>
-            <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={n.h / 2} fill="#ffffff08" stroke="#ffffff1f" />
-            <text x={n.x + n.w / 2} y={n.y + n.h / 2 + 5} fill="#9a948b">
-              {n.label}
-            </text>
-          </g>
-        ))}
-      </g>
-      <g fontFamily="var(--font-mono)" fontSize="13">
-        {NODES.filter((n) => !n.dim && !n.out).map((n) => (
-          <g key={n.label} data-graph-node data-graph-active>
-            <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={13} fill="var(--accent-fill)" stroke="var(--accent-line)" />
-            <text x={n.x + n.w / 2} y={n.y + n.h / 2 + 4.5} textAnchor="middle" fill="var(--color-ink)">
-              {n.label}
-            </text>
-          </g>
-        ))}
-      </g>
-      <g fontFamily="var(--font-body)" fontSize="13.5" textAnchor="middle">
-        {NODES.filter((n) => n.out).map((n) => (
-          <g key={n.label} data-graph-node>
-            <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={n.h / 2} fill="var(--color-canvas-raised)" stroke="var(--accent-line)" />
-            <text x={n.x + n.w / 2} y={n.y + n.h / 2 + 5} fill="var(--color-ink)">
-              {n.label}
-            </text>
-          </g>
-        ))}
-      </g>
     </svg>
   );
 }
