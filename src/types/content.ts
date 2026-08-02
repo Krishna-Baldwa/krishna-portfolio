@@ -6,9 +6,10 @@ export interface NavStep {
 
 export interface HeroContent {
   planLine: string;
-  headline: string;
-  headlineAccent: string;
-  subline: string;
+  name: string;
+  role: string;
+  credibility: string;
+  tagline: string;
 }
 
 export interface StoryContent {

@@ -22,10 +22,10 @@ export const NAV_STEPS: NavStep[] = [
 
 export const HERO: HeroContent = {
   planLine: "> plan: introduce krishna → show what she builds → say hi",
-  headline: "I build with AI — and think out loud",
-  headlineAccent: "about it.",
-  subline:
-    "Krishna Baldwa. IIT Bombay engineer, AI product builder, and the person behind @inthe_blur. Mumbai.",
+  name: "Krishna Baldwa",
+  role: "AI Product Builder",
+  credibility: "IIT Bombay engineer · multi-agent AI systems at enterprise scale · creator of @inthe_blur · Mumbai",
+  tagline: "I build with AI — and think out loud about it.",
 };
 
 export const STORY: StoryContent = {
