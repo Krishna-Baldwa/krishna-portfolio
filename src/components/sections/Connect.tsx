@@ -35,7 +35,7 @@ export function Connect() {
               style={
                 i === 0
                   ? { border: "1px solid var(--accent-line)", background: "var(--accent-fill)", color: "var(--color-ink)" }
-                  : { border: "1px solid #ffffff1a", color: "var(--color-ink-dim)" }
+                  : { border: "1px solid var(--color-line)", color: "var(--color-ink-dim)" }
               }
             >
               {link.label}

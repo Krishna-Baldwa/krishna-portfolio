@@ -25,7 +25,7 @@ export function PhotoFrame({ src, alt = "", label = "KB", shape = "rect", classN
       className={`relative flex items-center justify-center overflow-hidden ${radius} ${className}`}
       style={{
         background:
-          "radial-gradient(120% 120% at 22% 18%, var(--accent-fill), transparent 60%), linear-gradient(160deg, #17160f, #0b0a09)",
+          "radial-gradient(120% 120% at 22% 18%, var(--accent-fill), transparent 60%), linear-gradient(160deg, var(--color-canvas-raised), var(--color-canvas))",
         border: "1px solid var(--color-line)",
       }}
     >

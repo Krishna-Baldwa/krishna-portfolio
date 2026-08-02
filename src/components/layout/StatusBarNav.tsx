@@ -4,12 +4,7 @@ import { useScrollSpy } from "../../hooks/useScrollSpy";
 import { useLenis } from "../../hooks/useLenis";
 import { gsap, ScrollTrigger, useGSAP } from "../../lib/gsap";
 
-const THEMES = {
-  violet: { accent: "#8b7bff", hi: "#a99bff", line: "#8b7bff61", fill: "#8b7bff1a", dim: "#8b7bff4d", glow: "#8b7bff29" },
-  teal: { accent: "#2fd8c0", hi: "#6fe7d6", line: "#2fd8c05c", fill: "#2fd8c017", dim: "#2fd8c047", glow: "#2fd8c024" },
-} as const;
-
-type ThemeName = keyof typeof THEMES;
+type ThemeMode = "dark" | "light";
 
 const SECTION_IDS = NAV_STEPS.map((step) => step.id);
 
@@ -19,7 +14,7 @@ export function StatusBarNav() {
   const active = NAV_STEPS[activeIndex] ?? NAV_STEPS[0];
   const lenis = useLenis();
   const fillRef = useRef<HTMLDivElement>(null);
-  const [theme, setTheme] = useState<ThemeName>("violet");
+  const [mode, setMode] = useState<ThemeMode>("dark");
 
   // Thin top-edge fill tracks overall document scroll progress — the
   // "trace" line for the whole page, distinct from any per-section motion.
@@ -34,16 +29,9 @@ export function StatusBarNav() {
     return () => trigger.kill();
   }, []);
 
-  const applyTheme = (name: ThemeName) => {
-    const t = THEMES[name];
-    const root = document.documentElement.style;
-    root.setProperty("--accent", t.accent);
-    root.setProperty("--accent-hi", t.hi);
-    root.setProperty("--accent-line", t.line);
-    root.setProperty("--accent-fill", t.fill);
-    root.setProperty("--accent-dim", t.dim);
-    root.setProperty("--accent-glow", t.glow);
-    setTheme(name);
+  const applyMode = (next: ThemeMode) => {
+    document.documentElement.dataset.theme = next;
+    setMode(next);
   };
 
   const scrollTo = (id: string) => {
@@ -58,7 +46,7 @@ export function StatusBarNav() {
 
   return (
     <>
-      <div className="fixed inset-x-0 top-0 z-50 h-[2px] bg-white/5">
+      <div className="fixed inset-x-0 top-0 z-50 h-[2px]" style={{ background: "var(--color-line)" }}>
         <div
           ref={fillRef}
           className="h-full origin-left"
@@ -66,7 +54,13 @@ export function StatusBarNav() {
         />
       </div>
 
-      <nav className="fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between gap-3 border-b border-white/5 bg-[#0b0a09]/70 px-4 backdrop-blur-md md:px-8">
+      <nav
+        className="fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between gap-3 px-4 backdrop-blur-md md:px-8"
+        style={{
+          borderBottom: "1px solid var(--color-line)",
+          background: "color-mix(in srgb, var(--color-canvas) 70%, transparent)",
+        }}
+      >
         <button
           onClick={() => scrollTo("top")}
           data-cursor-hover
@@ -97,20 +91,23 @@ export function StatusBarNav() {
           ))}
         </div>
 
-        <div className="hidden shrink-0 items-center gap-1 rounded-full border border-white/10 bg-black/30 p-1 font-mono text-[10px] sm:flex">
-          {(Object.keys(THEMES) as ThemeName[]).map((name) => (
+        <div
+          className="hidden shrink-0 items-center gap-1 rounded-full p-1 font-mono text-[10px] sm:flex"
+          style={{ border: "1px solid var(--color-line)", background: "var(--color-canvas-raised)" }}
+        >
+          {(["dark", "light"] as ThemeMode[]).map((m) => (
             <button
-              key={name}
-              onClick={() => applyTheme(name)}
+              key={m}
+              onClick={() => applyMode(m)}
               data-cursor-hover
               className="rounded-full px-2 py-1 transition-colors"
               style={{
-                color: theme === name ? THEMES[name].accent : "var(--color-ink-faint)",
-                background: theme === name ? THEMES[name].fill : "transparent",
-                border: `1px solid ${theme === name ? THEMES[name].line : "transparent"}`,
+                color: mode === m ? "var(--accent)" : "var(--color-ink-faint)",
+                background: mode === m ? "var(--accent-fill)" : "transparent",
+                border: `1px solid ${mode === m ? "var(--accent-line)" : "transparent"}`,
               }}
             >
-              {name}
+              {m}
             </button>
           ))}
         </div>

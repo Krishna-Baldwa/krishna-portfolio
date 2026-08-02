@@ -115,8 +115,8 @@ export function Hero() {
             </MagneticLink>
             <MagneticLink
               href="#connect"
-              className="inline-flex items-center rounded-full border border-white/10 px-[18px] py-[11px] text-[13.5px]"
-              style={{ color: "var(--color-ink-dim)" }}
+              className="inline-flex items-center rounded-full px-[18px] py-[11px] text-[13.5px]"
+              style={{ border: "1px solid var(--color-line)", color: "var(--color-ink-dim)" }}
             >
               Say hi
             </MagneticLink>

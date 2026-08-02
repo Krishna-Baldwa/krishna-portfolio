@@ -35,8 +35,8 @@ export function BuildRow({ project, index, isOpen, onToggle }: BuildRowProps) {
         <span
           className="hidden shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[11px] sm:inline-flex"
           style={{
-            border: `1px solid ${isActive ? "var(--accent-line)" : "#ffffff24"}`,
-            color: isActive ? "var(--color-ink)" : "#8f8981",
+            border: `1px solid ${isActive ? "var(--accent-line)" : "var(--color-line)"}`,
+            color: isActive ? "var(--color-ink)" : "var(--color-ink-faint)",
           }}
         >
           <span

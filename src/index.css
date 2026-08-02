@@ -13,7 +13,15 @@
   --font-display: "Space Grotesk Variable", "Space Grotesk", system-ui, sans-serif;
   --font-body: "Inter Variable", "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+}
 
+/* Runtime-switchable theme (dark/light mode) + accent. Plain custom
+   properties, not @theme tokens, because these flip at runtime via JS —
+   @theme tokens are compile-time and can't be reassigned per interaction.
+   Dark is the default/root palette; `:root[data-theme="light"]` below
+   overrides just the canvas/ink/line tokens. The violet accent stays
+   constant across both modes by design. */
+:root {
   --color-canvas: #0b0a09;
   --color-canvas-raised: #131211;
   --color-canvas-raised-2: #17160f;
@@ -21,18 +29,27 @@
   --color-ink-dim: #a29b93;
   --color-ink-faint: #6e6862;
   --color-line: #ffffff14;
-}
+  --color-index-stroke: #ffffff12;
+  color-scheme: dark;
 
-/* Runtime-switchable accent (violet <-> teal trace mode). Plain custom
-   properties, not @theme tokens, because these flip at runtime via JS —
-   @theme tokens are compile-time and can't be reassigned per interaction. */
-:root {
   --accent: #8b7bff;
   --accent-hi: #a99bff;
   --accent-line: #8b7bff61;
   --accent-fill: #8b7bff1a;
   --accent-dim: #8b7bff4d;
   --accent-glow: #8b7bff29;
+}
+
+:root[data-theme="light"] {
+  --color-canvas: #faf8f4;
+  --color-canvas-raised: #f1eee7;
+  --color-canvas-raised-2: #e9e4da;
+  --color-ink: #211e1a;
+  --color-ink-dim: #5f584d;
+  --color-ink-faint: #938c7e;
+  --color-line: #00000014;
+  --color-index-stroke: #00000012;
+  color-scheme: light;
 }
 
 @layer base {
@@ -119,7 +136,7 @@
   .section-index {
     font-family: var(--font-mono);
     font-weight: 500;
-    -webkit-text-stroke: 1px #ffffff12;
+    -webkit-text-stroke: 1px var(--color-index-stroke);
     color: transparent;
   }
 
