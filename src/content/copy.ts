@@ -54,7 +54,6 @@ export const BROADCAST: BroadcastContent = {
   heading: "I also build an audience.",
   copy:
     "@inthe_blur is where I make dense AI and tech topics clear and practical — explainers, tool breakdowns, and builds in public. Technical enough for engineers, accessible enough for everyone else. It started as a forcing function (\"do I actually understand this?\") and became my favorite build.",
-  handle: "@inthe_blur",
   handleUrl: "https://instagram.com/inthe_blur",
   posts: [
     { id: "post-1", caption: "how agents actually plan" },

@@ -51,7 +51,6 @@ export interface BroadcastPost {
 export interface BroadcastContent {
   heading: string;
   copy: string;
-  handle: string;
   handleUrl: string;
   posts: BroadcastPost[];
 }

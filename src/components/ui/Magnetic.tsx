@@ -1,4 +1,4 @@
-import { useRef, type CSSProperties, type MouseEventHandler, type ReactNode, type RefObject } from "react";
+import { useRef, type CSSProperties, type ReactNode, type RefObject } from "react";
 import { gsap, useGSAP } from "../../lib/gsap";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 
@@ -53,24 +53,5 @@ export function MagneticLink({ children, className, style, pull = 0.35, href, ta
     <a ref={ref} href={href} target={target} rel={rel} data-cursor-hover className={className} style={style}>
       {children}
     </a>
-  );
-}
-
-interface MagneticButtonProps {
-  children: ReactNode;
-  className?: string;
-  style?: CSSProperties;
-  pull?: number;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-  type?: "button" | "submit";
-}
-
-export function MagneticButton({ children, className, style, pull = 0.35, onClick, type = "button" }: MagneticButtonProps) {
-  const ref = useRef<HTMLButtonElement>(null);
-  useMagnetic(ref, pull);
-  return (
-    <button ref={ref} type={type} onClick={onClick} data-cursor-hover className={className} style={style}>
-      {children}
-    </button>
   );
 }

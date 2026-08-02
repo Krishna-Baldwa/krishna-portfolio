@@ -58,7 +58,10 @@ const ROLE_COLOR: Record<LineRole, string> = {
 // classified in that priority order wherever the regex matches.
 const TOKEN_PATTERN = /("[^"]*"|\b\w+(?=\()|\b\d{3}\b|\bOK\b)/g;
 
-function highlightTokens(text: string, baseColor: string): ReactNode {
+// Non-matched segments render with no explicit color, inheriting whatever
+// color the caller already set on the containing line — no need to pass
+// it through here too.
+function highlightTokens(text: string): ReactNode {
   const parts = text.split(TOKEN_PATTERN);
   return parts.map((part, i) => {
     if (!part) return null;
@@ -232,7 +235,7 @@ export function AgentTerminal() {
                 opacity: line.exiting ? undefined : 0.4 + (0.6 * (i + 1)) / MAX_VISIBLE_LINES,
               }}
             >
-              {line.role === "divider" ? line.text : highlightTokens(line.text, ROLE_COLOR[line.role])}
+              {line.role === "divider" ? line.text : highlightTokens(line.text)}
             </div>
           ))}
 
