@@ -68,6 +68,8 @@ export const BROADCAST: BroadcastContent = {
 
 export const LIFE: LifeContent = {
   facts: [
+    "I've certified my way through Anthropic Academy — Claude, Claude Code, Cowork — because I use them daily anyway.",
+    "I keep a personal dashboard that tracks basically my whole life.",
     "Gold medalist in triathlon at IIT Bombay's General Championship — swim, cycle, run, in Mumbai heat.",
     "All India Rank 1 in a national Sanskrit Olympiad. Yes, Sanskrit.",
     "Trained as a student mentor in the CBT-REBT counselling framework; mentored 10 freshmen through their first year.",
@@ -75,8 +77,6 @@ export const LIFE: LifeContent = {
     "I grew up around looms and yarn markets in Ichalkaranji.",
     "I sprint-raced at state level as a kid — 100m and 200m.",
     "My first \"products\" were C++ games: Bubble Trouble with real gravity.",
-    "I've certified my way through Anthropic Academy — Claude, Claude Code, Cowork — because I use them daily anyway.",
-    "I keep a personal dashboard that tracks basically my whole life.",
     "Long-term plan: build my own thing. Everything above is training.",
   ],
 };

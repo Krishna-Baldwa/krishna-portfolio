@@ -6,6 +6,26 @@ import { PhotoFrame } from "../ui/PhotoFrame";
 import { gsap, useGSAP } from "../../lib/gsap";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 
+// One quotable line per paragraph gets lifted out visually — skimmers still
+// catch the arc without reading all five paragraphs in full.
+const HIGHLIGHTS: Record<number, string> = {
+  0: "someone should really instrument all of this.",
+  2: "who you build with matters more than what you build.",
+};
+
+function withHighlight(text: string, phrase?: string) {
+  if (!phrase) return text;
+  const idx = text.indexOf(phrase);
+  if (idx === -1) return text;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <span style={{ color: "var(--color-ink)", fontWeight: 500 }}>{phrase}</span>
+      {text.slice(idx + phrase.length)}
+    </>
+  );
+}
+
 export function Story() {
   const ref = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -66,7 +86,7 @@ export function Story() {
                 className={isLast ? "text-pretty font-normal" : "text-pretty"}
                 style={isLast ? { color: "var(--color-ink)" } : undefined}
               >
-                {paragraph}
+                {withHighlight(paragraph, HIGHLIGHTS[i])}
               </p>
             );
           })}
