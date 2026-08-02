@@ -60,6 +60,13 @@
   html {
     background: var(--color-canvas);
     -webkit-text-size-adjust: 100%;
+    /* Scroll position is still fully driven by Lenis/native scroll — this
+       only hides the visible track, it doesn't disable scrolling. */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  html::-webkit-scrollbar {
+    display: none;
   }
 
   /* Lenis owns scroll physics; a competing native smooth-scroll causes the
