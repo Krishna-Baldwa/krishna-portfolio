@@ -1,4 +1,5 @@
 import type { Project } from "../../../types/content";
+import { MagneticLink } from "../../ui/Magnetic";
 
 const STATUS_LABEL: Record<Project["status"], string> = {
   shipped: "shipped",
@@ -87,6 +88,22 @@ export function BuildRow({ project, index, isOpen, onToggle }: BuildRowProps) {
               </span>
               {project.learned}
             </p>
+            {project.links && project.links.length > 0 && (
+              <div className="mt-1 flex flex-wrap gap-2">
+                {project.links.map((link) => (
+                  <MagneticLink
+                    key={link.href}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener"
+                    className="inline-flex items-center gap-1.5 rounded-full px-3 py-[7px] font-mono text-[11px]"
+                    style={{ border: "1px solid var(--accent-line)", color: "var(--color-ink)" }}
+                  >
+                    {link.label} <span style={{ color: "var(--accent)" }}>↗</span>
+                  </MagneticLink>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

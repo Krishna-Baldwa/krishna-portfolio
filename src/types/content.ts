@@ -17,6 +17,11 @@ export interface StoryContent {
 
 export type ProjectStatus = "shipped" | "archived" | "paused";
 
+export interface ProjectLink {
+  label: string;
+  href: string;
+}
+
 export interface Project {
   id: string;
   status: ProjectStatus;
@@ -24,6 +29,7 @@ export interface Project {
   title: string;
   story: string;
   learned: string;
+  links?: ProjectLink[];
 }
 
 export interface NotebookEntry {
