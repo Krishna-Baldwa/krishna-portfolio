@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { HERO } from "../../content/copy";
 import { AgentTerminal } from "./hero/AgentTerminal";
 import { MagneticLink } from "../ui/Magnetic";
 import { PhotoFrame } from "../ui/PhotoFrame";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
+import { useLenis } from "../../hooks/useLenis";
 import { gsap, useGSAP } from "../../lib/gsap";
 
 /** A small typing detail next to the avatar — decorative only. It never
@@ -34,6 +35,22 @@ export function Hero() {
   const printed = useBootLine(HERO.planLine);
   const containerRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const lenis = useLenis();
+
+  // Anchor hrefs stay for semantics/right-click, but a real navigation would
+  // push the hash onto the URL and jump instantly (Lenis's smooth scroll
+  // only runs through this handler, never through the browser's own
+  // default anchor behavior) — so every in-page CTA click is intercepted.
+  const scrollTo = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
+    event.preventDefault();
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (lenis) {
+      lenis.scrollTo(el, { offset: -64, duration: 1.2 });
+    } else {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   useGSAP(
     () => {
@@ -99,6 +116,7 @@ export function Hero() {
           <div className="flex flex-wrap gap-2.5">
             <MagneticLink
               href="#builds"
+              onClick={(e) => scrollTo(e, "builds")}
               className="inline-flex items-center gap-2 rounded-full px-[18px] py-[11px] text-[13.5px]"
               style={{
                 border: "1px solid var(--accent-line)",
@@ -110,6 +128,7 @@ export function Hero() {
             </MagneticLink>
             <MagneticLink
               href="#connect"
+              onClick={(e) => scrollTo(e, "connect")}
               className="inline-flex items-center rounded-full px-[18px] py-[11px] text-[13.5px]"
               style={{ border: "1px solid var(--color-line)", color: "var(--color-ink-dim)" }}
             >
